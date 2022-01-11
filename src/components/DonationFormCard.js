@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Row, Col, Typography, Statistic } from 'antd';
 import { Spin, Form, Input, Button, Select } from 'antd';
+import { ethers } from 'ethers';
 
 const layout = {
   labelCol: {
@@ -18,16 +19,27 @@ const tailLayout = {
   },
 };
 
-function DonationFormCard({ oneBalance, oneToUSDBalance }) {
+function DonationFormCard({ avaxBalance, oneToUSDBalance, stakeWheelBlockchain, getPoolPrizeInfo }) {
   const [form] = Form.useForm();
 
   const [usd, setUSD] = useState("0");
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values) => {
-    setLoading(true);
-    console.log(values);
-    setLoading(false);
+    try{
+      setLoading(true);
+      console.log(values);
+
+      const ethToWei = ethers.utils.parseUnits(values.donationAmount, 'ether');
+      const transaction = await stakeWheelBlockchain.buyTicketTokens({ value: ethToWei });
+      const tx = await transaction.wait();
+      console.log(tx);
+      setLoading(false);
+      getPoolPrizeInfo();
+    } catch(error) {
+      console.error(error);
+      setLoading(false);
+    }
   };
 
   const onReset = () => {
@@ -44,7 +56,7 @@ function DonationFormCard({ oneBalance, oneToUSDBalance }) {
         <Row gutter={16}>
           <Col className="gutter-col" sm={{ span: 24 }} md={{ span: 8 }}>
             <p style={{ marginBottom: '1rem'}}>For every AVAX (Avalanche) donated to charities, you receive ten ticket to spin the stake wheel.</p>
-            <Statistic title="Your Available AVAX" value={`${oneBalance / 10 ** 18} AVAX ($${oneToUSDBalance})`} />
+            <Statistic title="Your Available AVAX" value={`${avaxBalance / 10 ** 18} AVAX ($${oneToUSDBalance})`} />
           </Col>
           <Col className="gutter-col" sm={{ span: 24 }} md={{ span: 16 }}>
             <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>

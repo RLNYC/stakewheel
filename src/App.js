@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 import { Layout } from 'antd';
+import { ethers } from 'ethers';
+import Web3Modal from 'web3modal';
 
 import './App.css';
 import Navbar from './components/Navbar';
@@ -9,11 +11,19 @@ import SpinWheel from './pages/SpinWheel';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState('');
+  const [avaxBalance, setAvaxBalance] = useState(0);
+  const [ticketTokenBlockchain, setTicketTokenBlockchain] = useState(null);
+  const [stakeWheelBlockchain, setStakeWheelBlockchain] = useState(null);
 
   return (
     <HashRouter>
       <Layout className="App">
-        <Navbar />
+        <Navbar
+          walletAddress={walletAddress}
+          setWalletAddress={setWalletAddress}
+          setAvaxBalance={setAvaxBalance}
+          setStakeWheelBlockchain={setStakeWheelBlockchain}
+          setTicketTokenBlockchain={setTicketTokenBlockchain} />
         <Layout>
           <Layout.Sider
             width={180}
@@ -41,7 +51,10 @@ function App() {
               <Switch>
                 <Route path="/">
                   <SpinWheel
-                    walletAddress={walletAddress} />
+                    walletAddress={walletAddress}
+                    avaxBalance={avaxBalance}
+                    stakeWheelBlockchain={stakeWheelBlockchain}
+                    ticketTokenBlockchain={ticketTokenBlockchain} />
                 </Route>
               </Switch>
             </Layout.Content>

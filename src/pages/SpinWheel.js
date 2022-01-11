@@ -7,9 +7,8 @@ import Wheel from '../components/Wheel';
 import PrizeInformationCard from '../components/PrizeInformationCard';
 import ResultModal from '../components/ResultModal';
 
-function SpinWheel({ walletAddress }) {
+function SpinWheel({ walletAddress, avaxBalance, stakeWheelBlockchain, ticketTokenBlockchain }) {
   const [wheelclass, setWheelclass] = useState("box");
-  const [oneBalance, setOneBalance] = useState(0);
   const [oneToUSDBalance, setOneToUSDBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
   const [donationTotal, setDonationTotal] = useState(0);
@@ -19,6 +18,28 @@ function SpinWheel({ walletAddress }) {
   const [usedTickets, setUsedTickets] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [result, setResult] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if(stakeWheelBlockchain) getPoolPrizeInfo();
+    if(ticketTokenBlockchain) getTicketToken();
+  }, [stakeWheelBlockchain, ticketTokenBlockchain])
+
+  const getPoolPrizeInfo = async () => {
+    const donation = await stakeWheelBlockchain.totalDonation();
+    setDonationTotal(donation);
+
+    const prize = await stakeWheelBlockchain.prizePool();
+    setPoolPrize(prize);
+
+    const award = await stakeWheelBlockchain.prizePoolWon();
+    setAwardedWon(award);
+  }
+
+  const getTicketToken = async () => {
+    const amount = await ticketTokenBlockchain.balanceOf(walletAddress);
+    setTokenBalance(amount);
+  }
 
   const startRotation = (wheelNumber) => {
     setWheelclass("box start-rotate");
@@ -29,7 +50,23 @@ function SpinWheel({ walletAddress }) {
   }
 
   const earnToken = async () => {
-    startRotation(1);
+    try{
+      setLoading(true);
+      const transaction = await stakeWheelBlockchain.useTicketToken();
+      const tx = await transaction.wait();
+      console.log(tx);
+      setUsedTickets(usedTickets + 1);
+      setWonOne(tx.events[1].args.amount.toString());
+      setResult(tx.events[1].args.result);
+      startRotation(tx.events[1].args.wheelNumber.toString());
+
+      setLoading(false);
+      getPoolPrizeInfo();
+      getTicketToken();
+    } catch(error) {
+      console.error(error);
+      setLoading(false);
+    }
   }
 
   return (
@@ -40,8 +77,10 @@ function SpinWheel({ walletAddress }) {
         awardedWon={awardedWon} />
 
       <DonationFormCard
-        oneBalance={oneBalance}
-        oneToUSDBalance={oneToUSDBalance} />
+        avaxBalance={avaxBalance}
+        oneToUSDBalance={oneToUSDBalance}
+        stakeWheelBlockchain={stakeWheelBlockchain}
+        getPoolPrizeInfo={getPoolPrizeInfo} />
 
       <Typography.Title style={{ marginTop: '1rem', textAlign: 'center'}}>
         Stake Wheel
@@ -51,6 +90,7 @@ function SpinWheel({ walletAddress }) {
         <Col className="gutter-row" xs={{ span: 32 }} lg={{ span: 12 }}>
           <Wheel
             wheelclass={wheelclass}
+            loading={loading}
             earnToken={earnToken}/>
         </Col>
         <Col className="gutter-row" xs={{ span: 32 }} lg={{ span: 12 }}>

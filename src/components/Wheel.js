@@ -10,7 +10,7 @@ import icon6 from '../assets/wheel 10 tickets.png';
 import icon7 from '../assets/spin_ticket_5.png';
 import icon8 from '../assets/better_luck.png';
 
-function Wheel({ wheelclass, earnToken }) {
+function Wheel({ wheelclass, loading, earnToken }) {
   return (
     <div className="wheel">
       <div className="mainbox">
@@ -47,7 +47,7 @@ function Wheel({ wheelclass, earnToken }) {
           </div>
         </div>
         <button className="spin"></button>
-          <Button className="btn-spin" onClick={earnToken} type="primary" size="large">
+          <Button className="btn-spin" onClick={earnToken} type="primary" size="large" loading={loading}>
             SPIN (Cost 1 Ticket)
           </Button>
       </div>
