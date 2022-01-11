@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { HashRouter, Switch, Route } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import { Layout } from 'antd';
-import { ethers } from 'ethers';
-import Web3Modal from 'web3modal';
 
 import './App.css';
 import Navbar from './components/Navbar';
@@ -48,15 +46,15 @@ function App() {
                 minHeight: 280,
               }}
             >
-              <Switch>
-                <Route path="/">
+              <Routes>
+                <Route path="/" element={
                   <SpinWheel
                     walletAddress={walletAddress}
                     avaxBalance={avaxBalance}
                     stakeWheelBlockchain={stakeWheelBlockchain}
-                    ticketTokenBlockchain={ticketTokenBlockchain} />
+                    ticketTokenBlockchain={ticketTokenBlockchain} />} >
                 </Route>
-              </Switch>
+              </Routes>
             </Layout.Content>
           </Layout>
         </Layout>
