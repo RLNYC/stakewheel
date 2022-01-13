@@ -14,6 +14,14 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
+  const StakeToken = await hre.ethers.getContractFactory("StakeToken");
+  const stakeToken = await StakeToken.deploy();
+
+  await stakeToken.deployed();
+
+  console.log("Stake token deployed to:", stakeToken.address);
+
+
   const TicketToken = await hre.ethers.getContractFactory("TicketToken");
   const ticketToken = await TicketToken.deploy();
 
@@ -22,7 +30,7 @@ async function main() {
   console.log("Ticket token deployed to:", ticketToken.address);
 
   const StakeWheel = await hre.ethers.getContractFactory("StakeWheel");
-  const stakeWheel = await StakeWheel.deploy(ticketToken.address);
+  const stakeWheel = await StakeWheel.deploy(stakeToken.address, ticketToken.address);
 
   await stakeWheel.deployed();
 

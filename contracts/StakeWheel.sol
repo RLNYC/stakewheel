@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.12;
 
+import "./StakeToken.sol";
 import "./TicketToken.sol";
 
 contract StakeWheel {
-    TicketToken private token;
+    StakeToken private stakeToken;
+    TicketToken private ticketToken;
     uint public totalDonation = 0;
     uint public prizePool = 0;
     uint public prizePoolWon = 0;
@@ -23,23 +25,24 @@ contract StakeWheel {
         uint wheelNumber
     );
 
-    constructor(TicketToken _token) public {
+    constructor(StakeToken _stakeToken, TicketToken _ticketToken) public {
         _owner = msg.sender;
-        token = _token;
+        stakeToken = _stakeToken;
+        ticketToken = _ticketToken;
     }
 
     // Send ticket token
     function buyTicketTokens() payable public  {
         prizePool += msg.value;
         totalDonation += msg.value;
-        token.mint(msg.sender, msg.value);
+        ticketToken.mint(msg.sender, msg.value);
 
         emit TokenSale(msg.sender, msg.value);
     }
 
     // Pay 1 Ticket token to spin the wheel and a chance to earn reward
     function useTicketToken() public {
-        token.burn(msg.sender, 10 ** 18);
+        ticketToken.burn(msg.sender, 10 ** 18);
         uint randomNumber = getRandomValue(100);
         string memory result;
         uint amount;
@@ -64,13 +67,13 @@ contract StakeWheel {
         else if(randomNumber > 70){
             result = "10 Tickets";
             amount = 0;
-            token.mint(msg.sender, 10 * 10 ** 18);
+            ticketToken.mint(msg.sender, 10 * 10 ** 18);
             wheelNumber = 6;
         }
         else if(randomNumber > 60){
             result = "5 Tickets";
             amount = 0;
-            token.mint(msg.sender, 5 * 10 ** 18);
+            ticketToken.mint(msg.sender, 5 * 10 ** 18);
             wheelNumber = 5;
         }
         else if(randomNumber > 50){
