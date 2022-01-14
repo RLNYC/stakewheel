@@ -31,11 +31,11 @@ contract StakeWheel {
         ticketToken = _ticketToken;
     }
 
-    // Send ticket token
+    // Send stake token
     function buyTicketTokens() payable public  {
         prizePool += msg.value;
         totalDonation += msg.value;
-        ticketToken.mint(msg.sender, msg.value);
+        stakeToken.mint(msg.sender, msg.value * 10);
 
         emit TokenSale(msg.sender, msg.value);
     }
@@ -119,8 +119,21 @@ contract StakeWheel {
         return uint(keccak256(abi.encodePacked(now, block.difficulty, msg.sender))) % mod;
     }
 
-    // NOTE: For testing only, withdraw all the funds from the contract
+    // WARMING: Remove this on production
+    // Withdraw all the funds from the contract
     function withdraw() public {
         msg.sender.transfer(address(this).balance);
+    }
+
+    // WARMING: Remove this on production
+    // Get 10 Stake Tokens
+    function stakeTokenFaucet() public {
+        stakeToken.mint(msg.sender, 1e19);
+    }
+
+    // WARMING: Remove this on production
+    // Get 10 Ticket Tokens
+    function ticketTokenFaucet() public {
+        ticketToken.mint(msg.sender, 1e19);
     }
 }
