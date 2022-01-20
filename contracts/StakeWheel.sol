@@ -1,20 +1,37 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.12;
 
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./StakeToken.sol";
 import "./TicketToken.sol";
 
-contract StakeWheel {
-    StakeToken private stakeToken;
+contract StakeWheel is ERC721 {
+    TicketToken private stakeToken;
     TicketToken private ticketToken;
     uint public totalDonation = 0;
     uint public prizePool = 0;
     uint public prizePoolWon = 0;
     address payable _owner;
+    mapping(uint => StakeInfo) public stakelist;
 
-    event TokenSale (
-        address buyer,
-        uint amount
+    constructor(TicketToken _stakeToken, TicketToken _ticketToken) ERC721("Stake Wheel NFT", "SWNFT") public {
+        _owner = msg.sender;
+        stakeToken = _stakeToken;
+        ticketToken = _ticketToken;
+    }
+
+    struct StakeInfo {
+        uint nftid;
+        uint startDate;
+        uint stakeAmount;
+        address payable from;
+    }
+
+    event Staked (
+        uint nftid,
+        uint startDate,
+        uint stakeAmount,
+        address payable from
     );
 
     event WonWheel (
@@ -25,19 +42,20 @@ contract StakeWheel {
         uint wheelNumber
     );
 
-    constructor(StakeToken _stakeToken, TicketToken _ticketToken) public {
-        _owner = msg.sender;
-        stakeToken = _stakeToken;
-        ticketToken = _ticketToken;
-    }
-
-    // Send stake token
-    function buyTicketTokens() payable public  {
+    // Stake AVAX for Stake Token and get NFT
+    function stakeforTokens() payable public  {
         prizePool += msg.value;
         totalDonation += msg.value;
         stakeToken.mint(msg.sender, msg.value * 10);
+        
+        // Create NFT
+        uint _tokenId = totalSupply().add(1);
+        _safeMint(msg.sender, _tokenId);
 
-        emit TokenSale(msg.sender, msg.value);
+        // Record user stake infor
+        stakelist[_tokenId] = StakeInfo(_tokenId, block.timestamp, msg.value, msg.sender);
+
+        emit Staked(_tokenId, block.timestamp, msg.value, msg.sender);
     }
 
     // Pay 1 Ticket token to spin the wheel and a chance to earn reward
