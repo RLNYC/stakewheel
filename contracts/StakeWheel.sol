@@ -46,7 +46,7 @@ contract StakeWheel is ERC721 {
     function stakeforTokens() payable public  {
         prizePool += msg.value;
         totalDonation += msg.value;
-        stakeToken.mint(msg.sender, msg.value * 10);
+        stakeToken.mint(msg.sender, msg.value);
         
         // Create NFT
         uint _tokenId = totalSupply().add(1);
@@ -56,6 +56,19 @@ contract StakeWheel is ERC721 {
         stakelist[_tokenId] = StakeInfo(_tokenId, block.timestamp, msg.value, msg.sender);
 
         emit Staked(_tokenId, block.timestamp, msg.value, msg.sender);
+    }
+
+    // Claim Ticket Tokens if the user hold Stake Token for a week
+    function claimTicketTokens(uint _nftid) public {
+        StakeInfo storage userData = stakelist[_nftid];
+
+        // 17543 = 1 week
+        require(block.timestamp - userData.startDate > 17543, "You need to wait at least a week to claim Ticket Tokens");
+        require(ownerOf(_nftid) == msg.sender, "You do not own this NFT");
+        ticketToken.mint(msg.sender, userData.stakeAmount * 2);
+
+        // New start date
+        userData.startDate = block.timestamp;
     }
 
     // Pay 1 Ticket token to spin the wheel and a chance to earn reward
@@ -153,5 +166,12 @@ contract StakeWheel is ERC721 {
     // Get 10 Ticket Tokens
     function ticketTokenFaucet() public {
         ticketToken.mint(msg.sender, 1e19);
+    }
+
+    // WARMING: Remove this on production
+    // Change start date when staking
+    function changeStakeDate(uint _nftid, uint _newDate) public {
+        StakeInfo storage userData = stakelist[_nftid];
+        userData.startDate = _newDate;
     }
 }
