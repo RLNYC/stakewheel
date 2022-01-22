@@ -31,7 +31,7 @@ function DonationFormCard({ avaxBalance, oneToUSDBalance, stakeWheelBlockchain, 
       console.log(values);
 
       const ethToWei = ethers.utils.parseUnits(values.donationAmount, 'ether');
-      const transaction = await stakeWheelBlockchain.buyTicketTokens({ value: ethToWei });
+      const transaction = await stakeWheelBlockchain.stakeforTokens({ value: ethToWei });
       const tx = await transaction.wait();
       console.log(tx);
       setLoading(false);
@@ -60,7 +60,7 @@ function DonationFormCard({ avaxBalance, oneToUSDBalance, stakeWheelBlockchain, 
           </Col>
           <Col className="gutter-col" sm={{ span: 24 }} md={{ span: 16 }}>
             <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
-              <Form.Item
+              {/* <Form.Item
                 name="charityList"
                 label="Charity List"
                 rules={[
@@ -76,7 +76,7 @@ function DonationFormCard({ avaxBalance, oneToUSDBalance, stakeWheelBlockchain, 
                   <Select.Option value="0x83eb0e2e36da037d4a2f9145a2544252421d52d0">Red Cross</Select.Option>
                   <Select.Option value="0x41026a0c3880e0c6d19b0cdbb421f587f3029f40">Pet Shelter</Select.Option>
                 </Select>
-              </Form.Item>
+              </Form.Item> */}
               <Form.Item
                 name="donationAmount"
                 label="Donation Amount"

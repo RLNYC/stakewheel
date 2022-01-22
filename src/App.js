@@ -11,6 +11,7 @@ function App() {
   const [walletAddress, setWalletAddress] = useState('');
   const [avaxBalance, setAvaxBalance] = useState(0);
   const [ticketTokenBlockchain, setTicketTokenBlockchain] = useState(null);
+  const [stakeTokenBlockchain, setStakeTokenBlockchain] = useState(null);
   const [stakeWheelBlockchain, setStakeWheelBlockchain] = useState(null);
 
   return (
@@ -21,6 +22,7 @@ function App() {
           setWalletAddress={setWalletAddress}
           setAvaxBalance={setAvaxBalance}
           setStakeWheelBlockchain={setStakeWheelBlockchain}
+          setStakeTokenBlockchain={setStakeTokenBlockchain}
           setTicketTokenBlockchain={setTicketTokenBlockchain} />
         <Layout>
           <Layout.Sider
@@ -52,6 +54,7 @@ function App() {
                     walletAddress={walletAddress}
                     avaxBalance={avaxBalance}
                     stakeWheelBlockchain={stakeWheelBlockchain}
+                    stakeTokenBlockchain={stakeTokenBlockchain}
                     ticketTokenBlockchain={ticketTokenBlockchain} />} >
                 </Route>
               </Routes>

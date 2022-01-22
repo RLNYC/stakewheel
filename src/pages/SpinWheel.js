@@ -3,14 +3,16 @@ import { Row, Col, Typography, Divider, List, Card } from 'antd';
 
 import PrizePoolCard from '../components/PrizePoolCard';
 import DonationFormCard from '../components/DonationFormCard';
+import StakeTokenCard from '../components/StakeTokenCard';
 import Wheel from '../components/Wheel';
 import PrizeInformationCard from '../components/PrizeInformationCard';
 import ResultModal from '../components/ResultModal';
 
-function SpinWheel({ walletAddress, avaxBalance, stakeWheelBlockchain, ticketTokenBlockchain }) {
+function SpinWheel({ walletAddress, avaxBalance, stakeWheelBlockchain, stakeTokenBlockchain, ticketTokenBlockchain }) {
   const [wheelclass, setWheelclass] = useState("box");
   const [oneToUSDBalance, setOneToUSDBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
+  const [stakeTokenBalance, setStakeTokenBalance] = useState(0);
   const [donationTotal, setDonationTotal] = useState(0);
   const [poolPrize, setPoolPrize] = useState(0);
   const [awardedWon, setAwardedWon] = useState(0);
@@ -22,8 +24,15 @@ function SpinWheel({ walletAddress, avaxBalance, stakeWheelBlockchain, ticketTok
 
   useEffect(() => {
     if(stakeWheelBlockchain) getPoolPrizeInfo();
+  }, [stakeWheelBlockchain])
+
+  useEffect(() => {
     if(ticketTokenBlockchain) getTicketToken();
-  }, [stakeWheelBlockchain, ticketTokenBlockchain])
+  }, [ticketTokenBlockchain])
+
+  useEffect(() => {
+    if(stakeTokenBlockchain) getStakeToken();
+  }, [stakeTokenBlockchain])
 
   const getPoolPrizeInfo = async () => {
     const donation = await stakeWheelBlockchain.totalDonation();
@@ -39,6 +48,11 @@ function SpinWheel({ walletAddress, avaxBalance, stakeWheelBlockchain, ticketTok
   const getTicketToken = async () => {
     const amount = await ticketTokenBlockchain.balanceOf(walletAddress);
     setTokenBalance(amount);
+  }
+
+  const getStakeToken = async () => {
+    const amount = await stakeTokenBlockchain.balanceOf(walletAddress);
+    setStakeTokenBalance(amount);
   }
 
   const startRotation = (wheelNumber) => {
@@ -81,6 +95,11 @@ function SpinWheel({ walletAddress, avaxBalance, stakeWheelBlockchain, ticketTok
         oneToUSDBalance={oneToUSDBalance}
         stakeWheelBlockchain={stakeWheelBlockchain}
         getPoolPrizeInfo={getPoolPrizeInfo} />
+      
+      <StakeTokenCard
+        walletAddress={walletAddress}
+        stakeTokenBalance={stakeTokenBalance}
+        stakeWheelBlockchain={stakeWheelBlockchain} />
 
       <Typography.Title style={{ marginTop: '1rem', textAlign: 'center'}}>
         Stake Wheel
