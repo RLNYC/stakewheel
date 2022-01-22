@@ -34,6 +34,13 @@ contract StakeWheel is ERC721 {
         address payable from
     );
 
+    event Unstaked (
+        uint nftid,
+        uint startDate,
+        uint stakeAmount,
+        address payable from
+    );
+
     event WonWheel (
         address buyer,
         string result,
@@ -56,6 +63,25 @@ contract StakeWheel is ERC721 {
         stakelist[_tokenId] = StakeInfo(_tokenId, block.timestamp, msg.value, msg.sender);
 
         emit Staked(_tokenId, block.timestamp, msg.value, msg.sender);
+    }
+
+    // Unstake Stake Token and get back AVAX
+    // Burn NFT
+    function unstakeAndBurnNFT(uint _nftid) payable public  {
+        StakeInfo storage userData = stakelist[_nftid];
+
+        require(ownerOf(_nftid) == msg.sender, "You do not own this NFT");
+
+        // Burn NFT
+        _burn(_nftid);
+
+        // Remove Stake Tokens from the sender and send back AVAX
+        stakeToken.burn(msg.sender, userData.stakeAmount);
+        msg.sender.transfer(userData.stakeAmount);
+        prizePool -= userData.stakeAmount;
+        totalDonation -= userData.stakeAmount;
+
+        emit Unstaked(_nftid, block.timestamp, msg.value, msg.sender);
     }
 
     // Claim Ticket Tokens if the user hold Stake Token for a week
