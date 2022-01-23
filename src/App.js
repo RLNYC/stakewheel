@@ -6,6 +6,7 @@ import './App.css';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import SpinWheel from './pages/SpinWheel';
+import Faucet from './pages/Faucet';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState('');
@@ -49,6 +50,14 @@ function App() {
               }}
             >
               <Routes>
+                <Route path="/faucet" element={
+                  <Faucet
+                    walletAddress={walletAddress}
+                    avaxBalance={avaxBalance}
+                    stakeWheelBlockchain={stakeWheelBlockchain}
+                    stakeTokenBlockchain={stakeTokenBlockchain}
+                    ticketTokenBlockchain={ticketTokenBlockchain} />} >
+                </Route>
                 <Route path="/" element={
                   <SpinWheel
                     walletAddress={walletAddress}

@@ -15,6 +15,11 @@ function Sidebar() {
           Spin & Win
         </Link>
       </Menu.Item>
+      <Menu.Item key="2">
+        <Link to="/faucet">
+          Faucet
+        </Link>
+      </Menu.Item>
     </Menu>
   )
 }
