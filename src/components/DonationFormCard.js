@@ -19,7 +19,7 @@ const tailLayout = {
   },
 };
 
-function DonationFormCard({ avaxBalance, oneToUSDBalance, stakeWheelBlockchain, getPoolPrizeInfo }) {
+function DonationFormCard({ avaxBalance, oneToUSDBalance, stakeWheelBlockchain, getPoolPrizeInfo, getBalance }) {
   const [form] = Form.useForm();
 
   const [usd, setUSD] = useState("0");
@@ -36,6 +36,7 @@ function DonationFormCard({ avaxBalance, oneToUSDBalance, stakeWheelBlockchain, 
       console.log(tx);
       setLoading(false);
       getPoolPrizeInfo();
+      getBalance();
     } catch(error) {
       console.error(error);
       setLoading(false);

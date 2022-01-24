@@ -58,7 +58,7 @@ function Faucet({ walletAddress, avaxBalance, stakeWheelBlockchain, stakeTokenBl
 
       <br />
       <br />
-      
+
       <Statistic title="Tickets Tokens" value={`${ticketTokenBalance / 10 ** 18}`} />
       <Button onClick={ticketFaucet} type="primary">
         Get 10 Ticket Faucet

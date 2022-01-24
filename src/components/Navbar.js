@@ -9,19 +9,17 @@ import StakeWheel from '../artifacts/contracts/StakeWheel.sol/StakeWheel.json';
 import StakeToken from '../artifacts/contracts/StakeToken.sol/StakeToken.json';
 import TicketToken from '../artifacts/contracts/TicketToken.sol/TicketToken.json';
 
-function Navbar({ walletAddress, setWalletAddress, setAvaxBalance, setStakeWheelBlockchain, setStakeTokenBlockchain, setTicketTokenBlockchain }) {
+function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheelBlockchain, setStakeTokenBlockchain, setTicketTokenBlockchain }) {
   const connetToWallet = async () => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);  
     console.log(provider);
+    setEthProvider(provider);
 
     const signer = provider.getSigner();
     const address = await signer.getAddress();
     setWalletAddress(address);
-
-    const balance = await provider.getBalance(address);
-    setAvaxBalance(balance.toString());
 
     let contract = new ethers.Contract(STAKE_WHEEL_ADDRESS, StakeWheel.abi, signer);
     setStakeWheelBlockchain(contract);

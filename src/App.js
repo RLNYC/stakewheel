@@ -10,7 +10,7 @@ import Faucet from './pages/Faucet';
 
 function App() {
   const [walletAddress, setWalletAddress] = useState('');
-  const [avaxBalance, setAvaxBalance] = useState(0);
+  const [ethProvider, setEthProvider] = useState(null);
   const [ticketTokenBlockchain, setTicketTokenBlockchain] = useState(null);
   const [stakeTokenBlockchain, setStakeTokenBlockchain] = useState(null);
   const [stakeWheelBlockchain, setStakeWheelBlockchain] = useState(null);
@@ -21,7 +21,7 @@ function App() {
         <Navbar
           walletAddress={walletAddress}
           setWalletAddress={setWalletAddress}
-          setAvaxBalance={setAvaxBalance}
+          setEthProvider={setEthProvider}
           setStakeWheelBlockchain={setStakeWheelBlockchain}
           setStakeTokenBlockchain={setStakeTokenBlockchain}
           setTicketTokenBlockchain={setTicketTokenBlockchain} />
@@ -53,7 +53,6 @@ function App() {
                 <Route path="/faucet" element={
                   <Faucet
                     walletAddress={walletAddress}
-                    avaxBalance={avaxBalance}
                     stakeWheelBlockchain={stakeWheelBlockchain}
                     stakeTokenBlockchain={stakeTokenBlockchain}
                     ticketTokenBlockchain={ticketTokenBlockchain} />} >
@@ -61,7 +60,7 @@ function App() {
                 <Route path="/" element={
                   <SpinWheel
                     walletAddress={walletAddress}
-                    avaxBalance={avaxBalance}
+                    ethProvider={ethProvider}
                     stakeWheelBlockchain={stakeWheelBlockchain}
                     stakeTokenBlockchain={stakeTokenBlockchain}
                     ticketTokenBlockchain={ticketTokenBlockchain} />} >

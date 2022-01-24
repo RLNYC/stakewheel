@@ -8,8 +8,9 @@ import Wheel from '../components/Wheel';
 import PrizeInformationCard from '../components/PrizeInformationCard';
 import ResultModal from '../components/ResultModal';
 
-function SpinWheel({ walletAddress, avaxBalance, stakeWheelBlockchain, stakeTokenBlockchain, ticketTokenBlockchain }) {
+function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeTokenBlockchain, ticketTokenBlockchain }) {
   const [wheelclass, setWheelclass] = useState("box");
+  const [avaxBalance, setAvaxBalance] = useState(0);
   const [oneToUSDBalance, setOneToUSDBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
   const [stakeTokenBalance, setStakeTokenBalance] = useState(0);
@@ -23,7 +24,10 @@ function SpinWheel({ walletAddress, avaxBalance, stakeWheelBlockchain, stakeToke
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if(stakeWheelBlockchain) getPoolPrizeInfo();
+    if(stakeWheelBlockchain){
+      getPoolPrizeInfo();
+      getBalance();
+    }
   }, [stakeWheelBlockchain])
 
   useEffect(() => {
@@ -43,6 +47,11 @@ function SpinWheel({ walletAddress, avaxBalance, stakeWheelBlockchain, stakeToke
 
     const award = await stakeWheelBlockchain.prizePoolWon();
     setAwardedWon(award);
+  }
+
+  const getBalance = async () => {
+    const balance = await ethProvider.getBalance(walletAddress);
+    setAvaxBalance(balance.toString());
   }
 
   const getTicketToken = async () => {
@@ -94,7 +103,8 @@ function SpinWheel({ walletAddress, avaxBalance, stakeWheelBlockchain, stakeToke
         avaxBalance={avaxBalance}
         oneToUSDBalance={oneToUSDBalance}
         stakeWheelBlockchain={stakeWheelBlockchain}
-        getPoolPrizeInfo={getPoolPrizeInfo} />
+        getPoolPrizeInfo={getPoolPrizeInfo}
+        getBalance={getBalance} />
       
       <StakeTokenCard
         walletAddress={walletAddress}
