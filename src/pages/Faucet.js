@@ -1,7 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Typography, Statistic, Button, Select } from 'antd';
+import { Card, Typography, Statistic, Button, Form, Input } from 'antd';
 
-function Faucet({ walletAddress, avaxBalance, stakeWheelBlockchain, stakeTokenBlockchain, ticketTokenBlockchain }) {
+const layout = {
+  labelCol: {
+    span: 3,
+  },
+  wrapperCol: {
+    span: 16,
+  },
+};
+
+const tailLayout = {
+  wrapperCol: {
+    offset: 16,
+    span: 16,
+  },
+};
+
+function Faucet({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ticketTokenBlockchain }) {
+  const [form] = Form.useForm();
+
   const [ticketTokenBalance, setTicketTokenBalance] = useState(0);
   const [stakeTokenBalance, setStakeTokenBalance] = useState(0);
   
@@ -23,6 +41,17 @@ function Faucet({ walletAddress, avaxBalance, stakeWheelBlockchain, stakeTokenBl
     setStakeTokenBalance(amount);
   }
 
+  const onFinish = async (values) => {
+    try{
+      console.log(values);
+
+      const transaction = await stakeWheelBlockchain.changeStakeDate(values.nftid, values.date);
+      const tx = await transaction.wait();
+      console.log(tx);
+    } catch(error) {
+      console.error(error);
+    }
+  };
 
   const stakeFaucet = async () => {
     try{
@@ -63,6 +92,44 @@ function Faucet({ walletAddress, avaxBalance, stakeWheelBlockchain, stakeTokenBl
       <Button onClick={ticketFaucet} type="primary">
         Get 10 Ticket Faucet
       </Button>
+    </Card>
+
+    <Card>
+      <Typography.Title style={{ marginTop: '0', marginBottom: '.5rem'}}>
+        Change date of NFT
+      </Typography.Title>
+
+      <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+        <Form.Item
+          name="nftid"
+          label="NFTId"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Input placeholder="Id" />
+        </Form.Item>
+
+        <Form.Item
+          name="date"
+          label="New Date"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Input placeholder="1111" />
+        </Form.Item>
+
+        <Form.Item {...tailLayout}>
+          <Button type="primary" htmlType="submit">
+            Update
+          </Button>
+        </Form.Item>
+      </Form>
     </Card>
   </div>;
 }

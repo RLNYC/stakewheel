@@ -109,7 +109,8 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeToke
       <StakeTokenCard
         walletAddress={walletAddress}
         stakeTokenBalance={stakeTokenBalance}
-        stakeWheelBlockchain={stakeWheelBlockchain} />
+        stakeWheelBlockchain={stakeWheelBlockchain}
+        getTicketToken={getTicketToken} />
 
       <Typography.Title style={{ marginTop: '1rem', textAlign: 'center'}}>
         Stake Wheel

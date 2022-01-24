@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Typography, Statistic, Button } from 'antd';
 
-function StakeTokenCard({ walletAddress, stakeTokenBalance, stakeWheelBlockchain }) {
+function StakeTokenCard({ walletAddress, stakeTokenBalance, stakeWheelBlockchain, getTicketToken }) {
   const [nfts, setNFTs] = useState([]);
 
   useEffect(() => {
@@ -32,6 +32,29 @@ function StakeTokenCard({ walletAddress, stakeTokenBalance, stakeWheelBlockchain
     setNFTs(oldnfts);
   }
 
+  const claimTicketTokens = async (nftId) => {
+    try{
+      const transaction = await stakeWheelBlockchain.claimTicketTokens(nftId);
+      const tx = await transaction.wait();
+      console.log(tx);
+      getTicketToken();
+      getNFTs();
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
+  const unstakeAndBurnNFT = async (nftId) => {
+    try{
+      const transaction = await stakeWheelBlockchain.unstakeAndBurnNFT(nftId);
+      const tx = await transaction.wait();
+      console.log(tx);
+      getNFTs();
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
   return (
     <Card>
       <Typography.Title style={{ marginTop: '0', marginBottom: '.5rem'}}>
@@ -41,17 +64,17 @@ function StakeTokenCard({ walletAddress, stakeTokenBalance, stakeWheelBlockchain
      
       <Row gutter={16}>
         {nfts.map(nft => (
-          <Col className="gutter-col" sm={{ span: 24 }} md={{ span: 8 }}>
+          <Col className="gutter-col" sm={{ span: 24 }} md={{ span: 8 }} key={nft.nftid.toString()}>
             <Card>
               <h2>NFT Id: {nft.nftid.toString()}</h2>
               <p>Stake Amount: {nft.stakeAmount.toString() / 10 ** 18} AVAX</p>
               <p>Start Date: {getDate(nft.startDate.toString())}</p>
               <p>Claim Date: {getDate(+nft.startDate.toString() + 17543)}</p>
-              <Button type="primary">
+              <Button type="primary" onClick={() => claimTicketTokens(nft.nftid.toString())}>
                 Claim Ticket Tokens
               </Button>
               <br />
-              <Button type="danger">
+              <Button type="danger" onClick={() => unstakeAndBurnNFT(nft.nftid.toString())}>
                 Unstake and Burn NFT
               </Button>
             </Card>
