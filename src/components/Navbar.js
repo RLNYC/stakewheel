@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Layout, Button } from 'antd';
+import { Layout, Menu, Button } from 'antd';
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 
@@ -32,32 +32,39 @@ function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheel
   }
 
   return (
-    <Layout.Header>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Link to="/" style={{ color: 'white'}}>
-          Stake Wheel
-        </Link>
-        <div>
-          {!walletAddress
-            ? <div>
-                <Button
-                  style={{ marginBottom: '7px'}}
-                  type="primary"
-                  onClick={connetToWallet}
-                >
-                  Connect to Wallet
-                </Button>
-              </div>
-            : <Button
-                style={{ marginBottom: '7px'}}
-                type="primary"
-              >
-                { walletAddress.substring(0, 7) + '...' + walletAddress.substring(35, 42) }
-              </Button>
-          }
-        </div>
-      </div>
-     
+    <Layout.Header style={{ display: 'flex', alignItems: 'center',  padding: '0 6.5rem'}}>
+      <Link to="/" style={{ color: 'white', marginRight: '2rem' }}>
+        Stake Wheel
+      </Link>
+      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} style={{ flex: 1 }}>
+        <Menu.Item key="1">
+          <Link to="/">
+            Spin & Win
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="2">
+          <Link to="/faucet">
+            Faucet
+          </Link>
+        </Menu.Item>
+      </Menu>
+      {!walletAddress
+        ? <div>
+            <Button
+              style={{ marginBottom: '7px'}}
+              type="primary"
+              onClick={connetToWallet}
+            >
+              Connect to Wallet
+            </Button>
+          </div>
+        : <Button
+            style={{ marginBottom: '7px'}}
+            type="primary"
+          >
+            { walletAddress.substring(0, 7) + '...' + walletAddress.substring(35, 42) }
+          </Button>
+      }
     </Layout.Header>
   )
 }
