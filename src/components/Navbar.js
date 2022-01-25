@@ -39,10 +39,20 @@ function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheel
       <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} style={{ flex: 1 }}>
         <Menu.Item key="1">
           <Link to="/">
-            Spin & Win
+            Home
           </Link>
         </Menu.Item>
         <Menu.Item key="2">
+          <Link to="/stake">
+            Stake
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="3">
+          <Link to="/">
+            Spin & Win
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="4">
           <Link to="/faucet">
             Faucet
           </Link>

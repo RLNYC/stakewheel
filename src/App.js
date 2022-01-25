@@ -4,6 +4,7 @@ import { Layout } from 'antd';
 
 import './App.css';
 import Navbar from './components/Navbar';
+import Stake from './pages/Stake';
 import SpinWheel from './pages/SpinWheel';
 import Faucet from './pages/Faucet';
 
@@ -35,6 +36,13 @@ function App() {
               }}
             >
               <Routes>
+                <Route path="/stake" element={
+                  <Stake
+                    walletAddress={walletAddress}
+                    stakeWheelBlockchain={stakeWheelBlockchain}
+                    stakeTokenBlockchain={stakeTokenBlockchain}
+                    ethProvider={ethProvider} />} >
+                </Route>
                 <Route path="/faucet" element={
                   <Faucet
                     walletAddress={walletAddress}

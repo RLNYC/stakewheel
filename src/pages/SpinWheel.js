@@ -3,17 +3,15 @@ import { Row, Col, Typography, Divider, List, Card } from 'antd';
 
 import PrizePoolCard from '../components/PrizePoolCard';
 import DonationFormCard from '../components/DonationFormCard';
-import StakeTokenCard from '../components/StakeTokenCard';
 import Wheel from '../components/Wheel';
 import PrizeInformationCard from '../components/PrizeInformationCard';
 import ResultModal from '../components/ResultModal';
 
-function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeTokenBlockchain, ticketTokenBlockchain }) {
+function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeTokenBlockchain, ticketTokenBlockchain, getStakeToken }) {
   const [wheelclass, setWheelclass] = useState("box");
   const [avaxBalance, setAvaxBalance] = useState(0);
   const [oneToUSDBalance, setOneToUSDBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
-  const [stakeTokenBalance, setStakeTokenBalance] = useState(0);
   const [donationTotal, setDonationTotal] = useState(0);
   const [poolPrize, setPoolPrize] = useState(0);
   const [awardedWon, setAwardedWon] = useState(0);
@@ -59,11 +57,6 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeToke
     setTokenBalance(amount);
   }
 
-  const getStakeToken = async () => {
-    const amount = await stakeTokenBlockchain.balanceOf(walletAddress);
-    setStakeTokenBalance(amount);
-  }
-
   const startRotation = (wheelNumber) => {
     setWheelclass("box start-rotate");
     setTimeout(async () => {
@@ -105,12 +98,6 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeToke
         stakeWheelBlockchain={stakeWheelBlockchain}
         getPoolPrizeInfo={getPoolPrizeInfo}
         getBalance={getBalance} />
-      
-      <StakeTokenCard
-        walletAddress={walletAddress}
-        stakeTokenBalance={stakeTokenBalance}
-        stakeWheelBlockchain={stakeWheelBlockchain}
-        getTicketToken={getTicketToken} />
 
       <Typography.Title style={{ marginTop: '1rem', textAlign: 'center'}}>
         Stake Wheel
