@@ -4,6 +4,7 @@ import { Layout } from 'antd';
 
 import './App.css';
 import Navbar from './components/Navbar';
+import Home from './pages/Home';
 import Stake from './pages/Stake';
 import SpinWheel from './pages/SpinWheel';
 import Faucet from './pages/Faucet';
@@ -50,13 +51,16 @@ function App() {
                     stakeTokenBlockchain={stakeTokenBlockchain}
                     ticketTokenBlockchain={ticketTokenBlockchain} />} >
                 </Route>
-                <Route path="/" element={
+                <Route path="/spin" element={
                   <SpinWheel
                     walletAddress={walletAddress}
                     ethProvider={ethProvider}
                     stakeWheelBlockchain={stakeWheelBlockchain}
-                    stakeTokenBlockchain={stakeTokenBlockchain}
                     ticketTokenBlockchain={ticketTokenBlockchain} />} >
+                </Route>
+                <Route path="/" element={
+                  <Home
+                    stakeWheelBlockchain={stakeWheelBlockchain} /> } >
                 </Route>
               </Routes>
             </Layout.Content>

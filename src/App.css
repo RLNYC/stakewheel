@@ -1,7 +1,6 @@
 .wheel {
   position: relative;
-  margin-top: 30px;
-  margin-bottom: 100px !important;
+  margin-bottom: 70px !important;
 }
 
 .arrow {
@@ -128,7 +127,7 @@
 }
 
 .btn-spin {
-  margin-top: 30px !important;
+  margin-top: 15px !important;
   display: block;
   margin: auto;
 }

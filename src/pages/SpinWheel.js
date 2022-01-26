@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Typography, Divider, List, Card } from 'antd';
 
-import PrizePoolCard from '../components/PrizePoolCard';
-import DonationFormCard from '../components/DonationFormCard';
 import Wheel from '../components/Wheel';
 import PrizeInformationCard from '../components/PrizeInformationCard';
 import ResultModal from '../components/ResultModal';
 
-function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeTokenBlockchain, ticketTokenBlockchain, getStakeToken }) {
+function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, ticketTokenBlockchain, getStakeToken }) {
   const [wheelclass, setWheelclass] = useState("box");
   const [avaxBalance, setAvaxBalance] = useState(0);
   const [oneToUSDBalance, setOneToUSDBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
-  const [donationTotal, setDonationTotal] = useState(0);
-  const [poolPrize, setPoolPrize] = useState(0);
-  const [awardedWon, setAwardedWon] = useState(0);
+ 
   const [wonOne, setWonOne] = useState(0);
   const [usedTickets, setUsedTickets] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -23,7 +19,6 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeToke
 
   useEffect(() => {
     if(stakeWheelBlockchain){
-      getPoolPrizeInfo();
       getBalance();
     }
   }, [stakeWheelBlockchain])
@@ -31,21 +26,6 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeToke
   useEffect(() => {
     if(ticketTokenBlockchain) getTicketToken();
   }, [ticketTokenBlockchain])
-
-  useEffect(() => {
-    if(stakeTokenBlockchain) getStakeToken();
-  }, [stakeTokenBlockchain])
-
-  const getPoolPrizeInfo = async () => {
-    const donation = await stakeWheelBlockchain.totalDonation();
-    setDonationTotal(donation);
-
-    const prize = await stakeWheelBlockchain.prizePool();
-    setPoolPrize(prize);
-
-    const award = await stakeWheelBlockchain.prizePoolWon();
-    setAwardedWon(award);
-  }
 
   const getBalance = async () => {
     const balance = await ethProvider.getBalance(walletAddress);
@@ -77,7 +57,6 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeToke
       startRotation(tx.events[1].args.wheelNumber.toString());
 
       setLoading(false);
-      getPoolPrizeInfo();
       getTicketToken();
     } catch(error) {
       console.error(error);
@@ -86,23 +65,7 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeToke
   }
 
   return (
-    <div>
-      <PrizePoolCard
-        donationTotal={donationTotal}
-        poolPrize={poolPrize}
-        awardedWon={awardedWon} />
-
-      <DonationFormCard
-        avaxBalance={avaxBalance}
-        oneToUSDBalance={oneToUSDBalance}
-        stakeWheelBlockchain={stakeWheelBlockchain}
-        getPoolPrizeInfo={getPoolPrizeInfo}
-        getBalance={getBalance} />
-
-      <Typography.Title style={{ marginTop: '1rem', textAlign: 'center'}}>
-        Stake Wheel
-      </Typography.Title>
-
+    <Card>
       <Row gutter={16}>
         <Col className="gutter-row" xs={{ span: 32 }} lg={{ span: 12 }}>
           <Wheel
@@ -111,7 +74,7 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeToke
             earnToken={earnToken}/>
         </Col>
         <Col className="gutter-row" xs={{ span: 32 }} lg={{ span: 12 }}>
-          <Typography.Title level={2}>
+          <Typography.Title level={2} style={{ marginTop: '8rem'}}>
             Your Spin Tickets: {tokenBalance / 10 ** 18}
           </Typography.Title >
           
@@ -131,17 +94,17 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, stakeToke
                 />
               </List.Item>
           </List>
-
-          <Divider orientation="left">Prize Information</Divider>
-          <PrizeInformationCard />
         </Col>
       </Row>
+
+      <Divider orientation="left">Prize Information</Divider>
+      <PrizeInformationCard />
 
       <ResultModal
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         result={result} />
-    </div>
+    </Card>
   )
 }
 

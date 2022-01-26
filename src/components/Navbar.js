@@ -48,8 +48,8 @@ function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheel
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
-          <Link to="/">
-            Spin & Win
+          <Link to="/spin">
+            Spin
           </Link>
         </Menu.Item>
         <Menu.Item key="4">
