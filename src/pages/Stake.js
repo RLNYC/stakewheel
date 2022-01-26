@@ -47,7 +47,7 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
     const totalSupply = await stakeWheelBlockchain.totalSupply();
     let oldnfts = [];
 
-    for(let i = 2; i <= +totalSupply + 1; i++){
+    for(let i = 1; i <= +totalSupply; i++){
       const tokenOwner = await stakeWheelBlockchain.ownerOf(i);
       
       if(tokenOwner === walletAddress){
@@ -71,6 +71,8 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
       console.log(tx);
       setStakeLoading(false);
       getBalance();
+      getNFTs();
+      setAmount();
     } catch(error) {
       console.error(error);
       setStakeLoading(false);
@@ -91,10 +93,11 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
 
   const unstakeAndBurnNFT = async (nftId) => {
     try{
-      const transaction = await stakeWheelBlockchain.unstakeAndBurnNFT(nftId);
+      const transaction = await stakeWheelBlockchain.unstakeToken(nftId);
       const tx = await transaction.wait();
       console.log(tx);
       getNFTs();
+      getBalance();
     } catch(error) {
       console.error(error);
     }
@@ -119,7 +122,7 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
       {walletAddress && <div style={{ display: "flex", justifyContent: "center"}}>
         <Card title={`Your Wallet: ${walletAddress}`} bordered={false} style={{ width: 300 }}>
           <p>Available AVAX: {avaxBalance / 10 ** 18}</p>
-          <p>Deposit Amount: <InputNumber max={avaxBalance / 10 ** 18} onChange={onChange} /></p>
+          <p>Deposit Amount: <InputNumber max={avaxBalance / 10 ** 18} value={amount} onChange={onChange} /></p>
           <Button type="primary" onClick={stakeforTokens} loading={stakeLoading}>
             Submit
           </Button>

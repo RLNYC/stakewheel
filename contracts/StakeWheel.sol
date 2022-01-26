@@ -66,14 +66,14 @@ contract StakeWheel is ERC721 {
     }
 
     // Unstake Stake Token and get back AVAX
-    // Burn NFT
-    function unstakeAndBurnNFT(uint _nftid) payable public  {
+    // Transfer the NFT owned by sender to contract address
+    function unstakeToken(uint _nftid) payable public  {
         StakeInfo storage userData = stakelist[_nftid];
 
         require(ownerOf(_nftid) == msg.sender, "You do not own this NFT");
 
-        // Burn NFT
-        _burn(_nftid);
+        // Send the NFT owned by sender to contract address
+        transferFrom(msg.sender, address(this), _nftid);
 
         // Remove Stake Tokens from the sender and send back AVAX
         stakeToken.burn(msg.sender, userData.stakeAmount);
