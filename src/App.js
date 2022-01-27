@@ -27,9 +27,8 @@ function App() {
           setStakeTokenBlockchain={setStakeTokenBlockchain}
           setTicketTokenBlockchain={setTicketTokenBlockchain} />
         <Layout>
-          <Layout style={{ padding: '0 5rem 5rem', minHeight: '92vh' }}>
+          <Layout className="white-bg-color" style={{ padding: '0 5rem 5rem', minHeight: '92vh' }}>
             <Layout.Content
-              className="site-layout-background"
               style={{
                 padding: 24,
                 margin: 0,

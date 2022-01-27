@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { Typography } from 'antd';
 
 import PrizePoolCard from '../components/PrizePoolCard';
-
+import HomeImg from '../assets/home-img.png';
 
 function Home({ stakeWheelBlockchain }) {
   const [donationTotal, setDonationTotal] = useState(0);
@@ -30,6 +31,14 @@ function Home({ stakeWheelBlockchain }) {
       donationTotal={donationTotal}
       poolPrize={poolPrize}
       awardedWon={awardedWon} />
+    
+    <Typography.Title className="primary-color" style={{ marginTop: '.5rem', marginBottom: '.5rem', textAlign: 'center'}}>
+      How It Works
+    </Typography.Title>
+    <p style={{ fontSize: '1.4rem', textAlign: 'center'}}>
+      Participate in our staking pool and spin the prize wheel to win the staking awards and More... 
+    </p>
+    <img src={HomeImg} style={{ width: "100%"}} alt="How it works" />
   </div>;
 }
 

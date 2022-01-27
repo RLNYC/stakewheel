@@ -2,6 +2,10 @@
   background-color: #ED165F;
 }
 
+.primary-color {
+  color: #ED165F !important;
+}
+
 .white-bg-color {
   background-color: white;
 }
