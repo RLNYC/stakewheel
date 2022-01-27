@@ -1,3 +1,15 @@
+.primary-bg-color {
+  background-color: #ED165F;
+}
+
+.white-bg-color {
+  background-color: white;
+}
+
+.ant-menu-horizontal > .ant-menu-item-selected a {
+  color: #ED165F;
+}
+
 .wheel {
   position: relative;
   margin-bottom: 70px !important;

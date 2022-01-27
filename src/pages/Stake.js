@@ -123,7 +123,7 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
         <Card title={`Your Wallet: ${walletAddress}`} bordered={false} style={{ width: 300 }}>
           <p>Available AVAX: {avaxBalance / 10 ** 18}</p>
           <p>Deposit Amount: <InputNumber max={avaxBalance / 10 ** 18} value={amount} onChange={onChange} /></p>
-          <Button type="primary" onClick={stakeforTokens} loading={stakeLoading}>
+          <Button className="primary-bg-color" type="primary" onClick={stakeforTokens} loading={stakeLoading}>
             Submit
           </Button>
         </Card>

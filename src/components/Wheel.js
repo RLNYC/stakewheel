@@ -47,7 +47,7 @@ function Wheel({ wheelclass, loading, earnToken }) {
           </div>
         </div>
         <button className="spin"></button>
-          <Button className="btn-spin" onClick={earnToken} type="primary" size="large" loading={loading}>
+          <Button className="primary-bg-color btn-spin" onClick={earnToken} type="primary" size="large" loading={loading}>
             SPIN (Cost 1 Ticket)
           </Button>
       </div>

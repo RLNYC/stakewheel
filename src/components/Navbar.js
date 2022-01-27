@@ -32,11 +32,11 @@ function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheel
   }
 
   return (
-    <Layout.Header style={{ display: 'flex', alignItems: 'center',  padding: '0 6.5rem'}}>
-      <Link to="/" style={{ color: 'white', marginRight: '2rem' }}>
+    <Layout.Header className="white-bg-color" style={{ display: 'flex', alignItems: 'center',  padding: '0 6.5rem'}}>
+      <Link to="/" style={{ marginRight: '2rem' }}>
         Stake Wheel
       </Link>
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} style={{ flex: 1 }}>
+      <Menu mode="horizontal" defaultSelectedKeys={['1']} style={{ flex: 1 }}>
         <Menu.Item key="1">
           <Link to="/">
             Home
@@ -61,6 +61,7 @@ function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheel
       {!walletAddress
         ? <div>
             <Button
+              className="primary-bg-color"
               style={{ marginBottom: '7px'}}
               type="primary"
               onClick={connetToWallet}
@@ -69,6 +70,7 @@ function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheel
             </Button>
           </div>
         : <Button
+            className="primary-bg-color"
             style={{ marginBottom: '7px'}}
             type="primary"
           >
