@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Stake from './pages/Stake';
 import SpinWheel from './pages/SpinWheel';
+import MyAccount from './pages/MyAccount';
 import Faucet from './pages/Faucet';
 
 function App() {
@@ -42,6 +43,13 @@ function App() {
                     stakeWheelBlockchain={stakeWheelBlockchain}
                     stakeTokenBlockchain={stakeTokenBlockchain}
                     ethProvider={ethProvider} />} >
+                </Route>
+                <Route path="/myaccount" element={
+                  <MyAccount
+                    walletAddress={walletAddress}
+                    stakeWheelBlockchain={stakeWheelBlockchain}
+                    stakeTokenBlockchain={stakeTokenBlockchain}
+                    ticketTokenBlockchain={ticketTokenBlockchain} />} >
                 </Route>
                 <Route path="/faucet" element={
                   <Faucet

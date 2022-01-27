@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Typography, Statistic, Button, Divider, InputNumber } from 'antd';
 import { ethers } from 'ethers';
 
+import { getDate } from '../utils/date'; 
+
 function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethProvider }) {
   const [nfts, setNFTs] = useState([]);
   const [avaxBalance, setAvaxBalance] = useState(0);
@@ -29,13 +31,6 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
   const getBalance = async () => {
     const balance = await ethProvider.getBalance(walletAddress);
     setAvaxBalance(balance.toString());
-  }
-
-  const getDate = (dateTimeStamp) => {
-    const date = new Date(dateTimeStamp * 1000); // x1000 to convert from seconds to milliseconds 
-    let stringDate = date.toUTCString();
-    stringDate = stringDate.substring(0, stringDate.indexOf("GMT")) + "UTC";
-    return stringDate;
   }
 
   const onChange = (value) => {
