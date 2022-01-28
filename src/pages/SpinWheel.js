@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Typography, Divider, List, Card } from 'antd';
+import * as htmlToImage from 'html-to-image';
+import  axios from "axios";
 
+import { PINATA_API_KEY, PINATA_SECRET_API_KEY } from '../config';
+import { convertBase64ToImage }  from '../utils/convertImage';
 import Wheel from '../components/Wheel';
 import PrizeInformationCard from '../components/PrizeInformationCard';
 import ResultModal from '../components/ResultModal';
@@ -10,7 +14,7 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, ticketTok
   const [avaxBalance, setAvaxBalance] = useState(0);
   const [oneToUSDBalance, setOneToUSDBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
- 
+  const [winningURL, setWinnginURL] = useState("");
   const [wonOne, setWonOne] = useState(0);
   const [usedTickets, setUsedTickets] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -37,11 +41,36 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, ticketTok
     setTokenBalance(amount);
   }
 
+  const takeScreenShot = async () => {
+    const node = document.getElementById('wheelgame');
+    const imageBase64 = await htmlToImage.toPng(node);
+    console.log(imageBase64);
+
+    const imageData = convertBase64ToImage(imageBase64, "winningimg");
+    console.log(imageData);
+
+    const form = new FormData();
+    form.append('file', imageData);
+
+    const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", form, {
+      maxContentLength: "Infinity",
+      headers: {
+        "Content-Type": 'multipart/form-data',
+        pinata_api_key: PINATA_API_KEY, 
+        pinata_secret_api_key: PINATA_SECRET_API_KEY,
+      }
+    })
+    const cidLink = "https://gateway.pinata.cloud/ipfs/" + res.data.IpfsHash;
+    console.log(cidLink);
+    setWinnginURL(cidLink);
+  }
+
   const startRotation = (wheelNumber) => {
     setWheelclass("box start-rotate");
     setTimeout(async () => {
       setWheelclass("box start-rotate stop-rotate");
       setIsModalVisible(true);
+      takeScreenShot();
     }, (1000 + (125 * +wheelNumber)))
   }
 
@@ -66,7 +95,7 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, ticketTok
 
   return (
     <Card>
-      <Row gutter={16}>
+      <Row id="wheelgame" gutter={16}>
         <Col className="gutter-row" xs={{ span: 32 }} lg={{ span: 12 }}>
           <Wheel
             wheelclass={wheelclass}
@@ -103,7 +132,8 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, ticketTok
       <ResultModal
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
-        result={result} />
+        result={result}
+        winningURL={winningURL} />
     </Card>
   )
 }

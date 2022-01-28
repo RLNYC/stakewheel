@@ -29,7 +29,7 @@ function Overview({ walletAddress, stakeWheelBlockchain }) {
 
   const columns = [
     {
-      title: 'Start Date',
+      title: 'Deposit Date',
       dataIndex: 'startDate',
       key: 'startDate',
       render: text => <p>{getDate(text.toString())}</p>,
@@ -38,7 +38,7 @@ function Overview({ walletAddress, stakeWheelBlockchain }) {
       title: 'Claim Date',
       dataIndex: 'startDate',
       key: 'startDate',
-      render: text => <p>{getDate(+text.toString() + + 17543)}</p>,
+      render: text => <p>{getDate(+text.toString() + + 605543)}</p>,
     },
     {
       title: 'Deposits in Staking Pool',
