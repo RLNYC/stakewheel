@@ -3,7 +3,6 @@ import { Card, Row, Col, Typography, Statistic, Button, Divider, InputNumber } f
 import { ethers } from 'ethers';
 
 import { getDate } from '../utils/date'; 
-import StakeModal from '../components/StakeModal';
 
 function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethProvider }) {
   const [nfts, setNFTs] = useState([]);
@@ -11,9 +10,6 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
   const [stakeTokenBalance, setStakeTokenBalance] = useState(0);
   const [amount, setAmount] = useState(0);
   const [stakeLoading, setStakeLoading] = useState(false);
-  const [actionLoading, setActionLoading] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectnft, setSelectnft] = useState(null);
 
   useEffect(() => {
     if(stakeWheelBlockchain) getNFTs();
@@ -78,42 +74,6 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
     }
   };
 
-  const claimTicketTokens = async (nftId) => {
-    try{
-      setActionLoading(true);
-      const transaction = await stakeWheelBlockchain.claimTicketTokens(nftId);
-      const tx = await transaction.wait();
-      console.log(tx);
-      getNFTs();
-      setActionLoading(false);
-      setIsModalVisible(false);
-    } catch(error) {
-      console.error(error);
-      setActionLoading(false);
-    }
-  }
-
-  const unstakeAndBurnNFT = async (nftId) => {
-    try{
-      setActionLoading(true);
-      const transaction = await stakeWheelBlockchain.unstakeToken(nftId);
-      const tx = await transaction.wait();
-      console.log(tx);
-      getNFTs();
-      getBalance();
-      setActionLoading(false);
-      setIsModalVisible(false);
-    } catch(error) {
-      console.error(error);
-      setActionLoading(false);
-    }
-  }
-
-  const openPopup = (nft) => {
-    setIsModalVisible(true);
-    setSelectnft(nft);
-  }
-
   return (
     <Card>
       <Typography.Title style={{ marginTop: '0', marginBottom: '.5rem'}}>
@@ -152,20 +112,13 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
               <p>Stake Amount: {nft.stakeAmount.toString() / 10 ** 18} AVAX</p>
               <p>Start Date: {getDate(nft.startDate.toString())}</p>
               <p>Claim Date: {getDate(+nft.startDate.toString() + 17543)}</p>
-              <Button type="primary" onClick={() => openPopup(nft)}>
+              <Button type="primary">
                 Claim Ticket Tokens
               </Button>
             </Card>
           </Col>
         ))}
       </Row>
-      <StakeModal
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-        actionLoading={actionLoading}
-        claimTicketTokens={claimTicketTokens}
-        unstakeAndBurnNF={unstakeAndBurnNFT}
-        nft={selectnft} />
     </Card>
   )
 }

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Modal, Button } from 'antd';
 
-function StakeModal({ isModalVisible, setIsModalVisible, actionLoading, claimTicketTokens, unstakeAndBurnNF, nft }) {
+function StakeModal({ isModalVisible, setIsModalVisible, actionLoading, claimTicketTokens, unstakeAndBurnNF, selectnftid }) {
   return (
     <Modal
-      title={`Claim Ticket Tokens (#${nft?.nftid?.toString()})`}
+      title={`Claim Ticket Tokens (#${selectnftid?.toString()})`}
       visible={isModalVisible}
       onCancel={() => setIsModalVisible(false)}
       onOk={() => setIsModalVisible(false)}
@@ -12,13 +12,13 @@ function StakeModal({ isModalVisible, setIsModalVisible, actionLoading, claimTic
         <Button key="back" onClick={() => setIsModalVisible(false)}>
           Return
         </Button>,
-        <Button key="submit" type="primary" loading={actionLoading} onClick={() => unstakeAndBurnNF(nft?.nftid?.toString())}>
+        <Button key="submit" type="primary" loading={actionLoading} onClick={() => unstakeAndBurnNF(selectnftid?.toString())}>
           Unstake
         </Button>,
         <Button
           type="primary"
           loading={actionLoading}
-          onClick={() => claimTicketTokens(nft?.nftid?.toString())}
+          onClick={() => claimTicketTokens(selectnftid?.toString())}
         >
           Continue
         </Button>,

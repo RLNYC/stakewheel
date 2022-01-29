@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Space } from 'antd';
+import { Table, Button, Space } from 'antd';
 
 import { getDate } from '../../utils/date'; 
+import StakeModal from '../../components/StakeModal';
 
 function Overview({ walletAddress, stakeWheelBlockchain }) {
   const [nfts, setNFTs] = useState([]);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectnftid, setSelectnftid] = useState(null);
 
   useEffect(() => {
     if(stakeWheelBlockchain) getNFTs();
@@ -25,6 +29,41 @@ function Overview({ walletAddress, stakeWheelBlockchain }) {
     }
     console.log(oldnfts);
     setNFTs(oldnfts);
+  }
+
+  const claimTicketTokens = async (nftId) => {
+    try{
+      setActionLoading(true);
+      const transaction = await stakeWheelBlockchain.claimTicketTokens(nftId);
+      const tx = await transaction.wait();
+      console.log(tx);
+      getNFTs();
+      setActionLoading(false);
+      setIsModalVisible(false);
+    } catch(error) {
+      console.error(error);
+      setActionLoading(false);
+    }
+  }
+
+  const unstakeAndBurnNFT = async (nftId) => {
+    try{
+      setActionLoading(true);
+      const transaction = await stakeWheelBlockchain.unstakeToken(nftId);
+      const tx = await transaction.wait();
+      console.log(tx);
+      getNFTs();
+      setActionLoading(false);
+      setIsModalVisible(false);
+    } catch(error) {
+      console.error(error);
+      setActionLoading(false);
+    }
+  }
+
+  const openPopup = (nft) => {
+    setIsModalVisible(true);
+    setSelectnftid(nft);
   }
 
   const columns = [
@@ -54,10 +93,13 @@ function Overview({ walletAddress, stakeWheelBlockchain }) {
     },
     {
       title: 'Action',
-      key: 'action',
-      render: (text, record) => (
+      dataIndex: 'nftid',
+      key: 'nftid',
+      render: text => (
         <Space size="middle">
-          <a>Claim {record.name}</a>
+          <Button type="text" className="primary-color" onClick={() => openPopup(text.toString())}>
+            Claim
+          </Button>
         </Space>
       ),
     },
@@ -65,6 +107,13 @@ function Overview({ walletAddress, stakeWheelBlockchain }) {
 
   return <div>
     <Table columns={columns} dataSource={nfts} />
+    <StakeModal
+      isModalVisible={isModalVisible}
+      setIsModalVisible={setIsModalVisible}
+      actionLoading={actionLoading}
+      claimTicketTokens={claimTicketTokens}
+      unstakeAndBurnNF={unstakeAndBurnNFT}
+      selectnftid={selectnftid} />
   </div>;
 }
 
