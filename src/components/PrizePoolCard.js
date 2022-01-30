@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Row, Col, Statistic } from 'antd';
 
-function PrizePoolCard({ donationTotal, poolPrize, awardedWon }) {
+function PrizePoolCard({ donationTotal, poolPrize, awardedWon, charityAmount }) {
   return (
     <Card>
       <Row gutter={16} style={{ textAlign: "center"}}>
@@ -15,7 +15,7 @@ function PrizePoolCard({ donationTotal, poolPrize, awardedWon }) {
           <Statistic title="Total Winnings Awarded" value={`${awardedWon / 10 ** 18} AVAX`} />
         </Col>
         <Col className="gutter-col" sm={{ span: 24 }} md={{ span: 12 }}>
-          <Statistic title="Total Charity Donation" value={`${0 / 10 ** 18} AVAX`} />
+          <Statistic title="Total Charity Donation" value={`${charityAmount / 10 ** 18} AVAX`} />
         </Col>
       </Row>
     </Card>

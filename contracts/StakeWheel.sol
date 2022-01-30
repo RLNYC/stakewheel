@@ -11,6 +11,7 @@ contract StakeWheel is ERC721 {
     uint public totalDonation = 0;
     uint public prizePool = 0;
     uint public prizePoolWon = 0;
+    uint public charityAmount = 0;
     address payable _owner;
     mapping(uint => StakeInfo) public stakelist;
 
@@ -51,7 +52,8 @@ contract StakeWheel is ERC721 {
 
     // Stake AVAX for Stake Token and get NFT
     function stakeforTokens() payable public  {
-        prizePool += msg.value;
+        prizePool +=  msg.value * 7 / 100;
+        charityAmount += msg.value * 3 / 100;
         totalDonation += msg.value;
         stakeToken.mint(msg.sender, msg.value);
         
@@ -78,7 +80,6 @@ contract StakeWheel is ERC721 {
         // Remove Stake Tokens from the sender and send back AVAX
         stakeToken.burn(msg.sender, userData.stakeAmount);
         msg.sender.transfer(userData.stakeAmount);
-        prizePool -= userData.stakeAmount;
         totalDonation -= userData.stakeAmount;
 
         emit Unstaked(_nftid, block.timestamp, msg.value, msg.sender);

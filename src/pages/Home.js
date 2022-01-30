@@ -8,6 +8,7 @@ function Home({ stakeWheelBlockchain }) {
   const [donationTotal, setDonationTotal] = useState(0);
   const [poolPrize, setPoolPrize] = useState(0);
   const [awardedWon, setAwardedWon] = useState(0);
+  const [charityAmount, setCharityAmount] = useState(0);
 
   useEffect(() => {
     if(stakeWheelBlockchain){
@@ -24,13 +25,17 @@ function Home({ stakeWheelBlockchain }) {
 
     const award = await stakeWheelBlockchain.prizePoolWon();
     setAwardedWon(award);
+
+    const charity = await stakeWheelBlockchain.charityAmount();
+    setCharityAmount(charity);
   }
 
   return <div>
     <PrizePoolCard
       donationTotal={donationTotal}
       poolPrize={poolPrize}
-      awardedWon={awardedWon} />
+      awardedWon={awardedWon}
+      charityAmount={charityAmount} />
     
     <Typography.Title className="primary-color" style={{ marginTop: '.5rem', marginBottom: '.5rem', textAlign: 'center'}}>
       How It Works
