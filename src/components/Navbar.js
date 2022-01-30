@@ -52,12 +52,17 @@ function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheel
             Spin
           </Link>
         </Menu.Item>
-        {walletAddress && <Menu.Item key="4">
+        <Menu.Item key="4">
+          <Link to="/gift">
+            Donate
+          </Link>
+        </Menu.Item>
+        {walletAddress && <Menu.Item key="5">
           <Link to="/myaccount">
             My Account
           </Link>
         </Menu.Item>}
-        <Menu.Item key="5">
+        <Menu.Item key="6">
           <Link to="/faucet">
             Faucet
           </Link>
