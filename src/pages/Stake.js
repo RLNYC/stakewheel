@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Typography, Statistic, Button, Divider, InputNumber } from 'antd';
+import { Card, Row, Col, Typography, Statistic, Button, InputNumber } from 'antd';
 import { ethers } from 'ethers';
-
-import { getDate } from '../utils/date'; 
+import { useNavigate } from 'react-router-dom';
 
 function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethProvider }) {
-  const [nfts, setNFTs] = useState([]);
+  const history = useNavigate();
+  
   const [avaxBalance, setAvaxBalance] = useState(0);
   const [stakeTokenBalance, setStakeTokenBalance] = useState(0);
   const [amount, setAmount] = useState(0);
   const [stakeLoading, setStakeLoading] = useState(false);
-
-  useEffect(() => {
-    if(stakeWheelBlockchain) getNFTs();
-  }, [stakeWheelBlockchain]);
 
   useEffect(() => {
     if(stakeTokenBlockchain) getStakeToken();
@@ -38,23 +34,6 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
     setAmount(value);
   }
 
-  const getNFTs = async () => {
-    const totalSupply = await stakeWheelBlockchain.totalSupply();
-    let oldnfts = [];
-
-    for(let i = 1; i <= +totalSupply; i++){
-      const tokenOwner = await stakeWheelBlockchain.ownerOf(i);
-      
-      if(tokenOwner === walletAddress){
-        let data = await stakeWheelBlockchain.stakelist(i);
-        console.log(data);
-        oldnfts.push(data);
-      }
-    }
-
-    setNFTs(oldnfts);
-  }
-
   const stakeforTokens = async (values) => {
     try{
       setStakeLoading(true);
@@ -66,7 +45,6 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
       console.log(tx);
       setStakeLoading(false);
       getBalance();
-      getNFTs();
       setAmount();
     } catch(error) {
       console.error(error);
@@ -90,35 +68,35 @@ function Stake({ walletAddress, stakeWheelBlockchain, stakeTokenBlockchain, ethP
         You can redeem all your deposit back during non lock-up period.
       </Typography.Title>
 
-      {walletAddress && <div style={{ display: "flex", justifyContent: "center"}}>
-        <Card title={`Your Wallet: ${walletAddress}`} bordered={false} style={{ width: 300 }}>
-          <p>Available AVAX: {avaxBalance / 10 ** 18}</p>
-          <p>Deposit Amount: <InputNumber max={avaxBalance / 10 ** 18} value={amount} onChange={onChange} /></p>
-          <Button className="primary-bg-color" type="primary" onClick={stakeforTokens} loading={stakeLoading}>
-            Submit
-          </Button>
-        </Card>
-      </div>}
+      <br />
 
-      <Divider>NFTs</Divider>
-
-      <Statistic title="Stake Tokens" value={`${stakeTokenBalance / 10 ** 18}`} />
-     
-      <Row gutter={16}>
-        {nfts.map(nft => (
-          <Col className="gutter-col" sm={{ span: 24 }} md={{ span: 8 }} key={nft.nftid.toString()}>
-            <Card>
-              <h2>NFT Id: {nft.nftid.toString()}</h2>
-              <p>Stake Amount: {nft.stakeAmount.toString() / 10 ** 18} AVAX</p>
-              <p>Start Date: {getDate(nft.startDate.toString())}</p>
-              <p>Claim Date: {getDate(+nft.startDate.toString() + 17543)}</p>
-              <Button type="primary">
-                Claim Ticket Tokens
-              </Button>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+      {walletAddress
+        ? <Row gutter={16}>
+            <Col className="gutter-row" xs={{ span: 32 }} lg={{ span: 12 }}>
+              <Card title={`Your Wallet: ${walletAddress}`}>
+                <p>Available AVAX: {avaxBalance / 10 ** 18}</p>
+                <p>Deposit Amount: <InputNumber max={avaxBalance / 10 ** 18} value={amount} onChange={onChange} /></p>
+                <Button className="primary-bg-color" type="primary" onClick={stakeforTokens} loading={stakeLoading}>
+                  Submit
+                </Button>
+              </Card>
+            </Col>
+            <Col className="gutter-row" xs={{ span: 32 }} lg={{ span: 12 }}>
+              <Card title="Status">
+                <Statistic title="Stake Tokens" value={`${stakeTokenBalance / 10 ** 18}`} />
+                <p>Go to your account to see  your deposit and upcoming release date for spin tickets</p>
+                <Button
+                  className="primary-bg-color"
+                  type="primary"
+                  onClick={() => history('/myaccount')}
+                >
+                  Go to Dashboard
+                </Button>
+              </Card>
+            </Col>
+          </Row>
+        : <p style={{ fontSize: "1.6rem", textAlign: 'center', color: 'red'}}>Please connet to your Wallet</p>
+      }
     </Card>
   )
 }

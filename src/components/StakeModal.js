@@ -12,15 +12,16 @@ function StakeModal({ isModalVisible, setIsModalVisible, actionLoading, claimTic
         <Button key="back" onClick={() => setIsModalVisible(false)}>
           Return
         </Button>,
-        <Button key="submit" type="primary" loading={actionLoading} onClick={() => unstakeAndBurnNF(selectnftid?.toString())}>
+        <Button key="submit" className="primary-bg-color" type="primary" loading={actionLoading} onClick={() => unstakeAndBurnNF(selectnftid?.toString())}>
           Unstake
         </Button>,
         <Button
+          className="primary-bg-color"
           type="primary"
           loading={actionLoading}
           onClick={() => claimTicketTokens(selectnftid?.toString())}
         >
-          Continue
+          Re-deposit
         </Button>,
       ]}>
       <p>Would you like to claim ticket tokens and continue staking or stop and get back AVAX?</p>
