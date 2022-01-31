@@ -9,6 +9,10 @@ function Home({ stakeWheelBlockchain }) {
   const [poolPrize, setPoolPrize] = useState(0);
   const [awardedWon, setAwardedWon] = useState(0);
   const [charityAmount, setCharityAmount] = useState(0);
+  const [donationTotalUSD, setDonationTotalUSD] = useState(0);
+  const [poolPrizeUSD, setPoolPrizeUSD] = useState(0);
+  const [awardedWonUSD, setAwardedWonUSD] = useState(0);
+  const [charityAmountUSD, setCharityAmountUSD] = useState(0);
 
   useEffect(() => {
     if(stakeWheelBlockchain){
@@ -19,15 +23,28 @@ function Home({ stakeWheelBlockchain }) {
   const getPoolPrizeInfo = async () => {
     const donation = await stakeWheelBlockchain.totalDonation();
     setDonationTotal(donation);
+    setDonationTotalUSD(await getValue(donation));
 
     const prize = await stakeWheelBlockchain.prizePool();
+    setPoolPrizeUSD(await getValue(prize));
     setPoolPrize(prize);
 
     const award = await stakeWheelBlockchain.prizePoolWon();
+    setAwardedWonUSD(await getValue(award));
     setAwardedWon(award);
 
     const charity = await stakeWheelBlockchain.charityAmount();
+    setCharityAmountUSD(await getValue(charity));
     setCharityAmount(charity);
+  }
+
+  const getValue = async value => {
+    const usdValue = await stakeWheelBlockchain.getThePrice();
+
+    let totalUSDValue = (usdValue.toString() * value) / 10 ** 26;
+    totalUSDValue = Number.parseFloat(totalUSDValue).toFixed(2);
+
+    return totalUSDValue;
   }
 
   return <div>
@@ -35,7 +52,11 @@ function Home({ stakeWheelBlockchain }) {
       donationTotal={donationTotal}
       poolPrize={poolPrize}
       awardedWon={awardedWon}
-      charityAmount={charityAmount} />
+      charityAmount={charityAmount}
+      donationTotalUSD={donationTotalUSD}
+      poolPrizeUSD={poolPrizeUSD}
+      awardedWonUSD={awardedWonUSD}
+      charityAmountUSD={charityAmountUSD} />
     
     <Typography.Title className="primary-color" style={{ marginTop: '.5rem', marginBottom: '.5rem', textAlign: 'center'}}>
       How It Works

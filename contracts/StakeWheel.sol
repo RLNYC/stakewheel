@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.12;
 
+import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./StakeToken.sol";
 import "./TicketToken.sol";
@@ -8,6 +9,8 @@ import "./TicketToken.sol";
 contract StakeWheel is ERC721 {
     TicketToken private stakeToken;
     TicketToken private ticketToken;
+    AggregatorV3Interface internal priceFeed;
+
     uint public totalDonation = 0;
     uint public prizePool = 0;
     uint public prizePoolWon = 0;
@@ -15,10 +18,17 @@ contract StakeWheel is ERC721 {
     address payable _owner;
     mapping(uint => StakeInfo) public stakelist;
 
+    /**
+    * Network: Avalanche Testnet
+    * Aggregator: AVAX / USD
+    * Address: 0x5498BB86BC934c8D34FDA08E81D444153d0D06aD
+    */
     constructor(TicketToken _stakeToken, TicketToken _ticketToken) ERC721("Stake Wheel NFT", "SWNFT") public {
         _owner = msg.sender;
         stakeToken = _stakeToken;
         ticketToken = _ticketToken;
+
+        priceFeed = AggregatorV3Interface(0x5498BB86BC934c8D34FDA08E81D444153d0D06aD);
     }
 
     struct StakeInfo {
@@ -89,8 +99,8 @@ contract StakeWheel is ERC721 {
     function claimTicketTokens(uint _nftid) public {
         StakeInfo storage userData = stakelist[_nftid];
 
-        // 17543 = 1 week
-        require(block.timestamp - userData.startDate > 17543, "You need to wait at least a week to claim Ticket Tokens");
+        // 605543 = 1 week
+        require(block.timestamp - userData.startDate > 605543, "You need to wait at least a week to claim Ticket Tokens");
         require(ownerOf(_nftid) == msg.sender, "You do not own this NFT");
         ticketToken.mint(msg.sender, userData.stakeAmount * 2);
 
@@ -175,6 +185,18 @@ contract StakeWheel is ERC721 {
     // Return a random number 0 - 100
     function getRandomValue(uint mod) internal view returns(uint) {
         return uint(keccak256(abi.encodePacked(now, block.difficulty, msg.sender))) % mod;
+    }
+
+    // Returns the latest price
+    function getThePrice() public view returns (int) {
+        (
+            uint80 roundID, 
+            int price,
+            uint startedAt,
+            uint timeStamp,
+            uint80 answeredInRound
+        ) = priceFeed.latestRoundData();
+        return price;
     }
 
     // WARMING: Remove this on production
