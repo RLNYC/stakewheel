@@ -9,7 +9,7 @@ import Wheel from '../components/Wheel';
 import PrizeInformationCard from '../components/PrizeInformationCard';
 import ResultModal from '../components/ResultModal';
 
-function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, ticketTokenBlockchain, getStakeToken }) {
+function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, ticketTokenBlockchain, myWinnings, setMyWinnings }) {
   const [wheelclass, setWheelclass] = useState("box");
   const [avaxBalance, setAvaxBalance] = useState(0);
   const [oneToUSDBalance, setOneToUSDBalance] = useState(0);
@@ -81,10 +81,11 @@ function SpinWheel({ walletAddress, ethProvider, stakeWheelBlockchain, ticketTok
       const tx = await transaction.wait();
       console.log(tx);
       setUsedTickets(usedTickets + 1);
-      setWonOne(tx.events[1].args.amount.toString());
-      setResult(tx.events[1].args.result);
-      startRotation(tx.events[1].args.wheelNumber.toString());
+      setWonOne(tx.events[tx.events.length - 1].args.amount.toString());
+      setResult(tx.events[tx.events.length - 1].args.result);
+      startRotation(tx.events[tx.events.length - 1].args.wheelNumber.toString());
 
+      setMyWinnings([...myWinnings, { "id": myWinnings.length + 1, "result": tx.events[tx.events.length - 1].args.result, "amount": tx.events[tx.events.length - 1].args.amount.toString()}])
       setLoading(false);
       getTicketToken();
     } catch(error) {

@@ -17,6 +17,7 @@ function App() {
   const [ticketTokenBlockchain, setTicketTokenBlockchain] = useState(null);
   const [stakeTokenBlockchain, setStakeTokenBlockchain] = useState(null);
   const [stakeWheelBlockchain, setStakeWheelBlockchain] = useState(null);
+  const [myWinnings, setMyWinnings] = useState([]);
 
   return (
     <HashRouter>
@@ -57,7 +58,8 @@ function App() {
                     walletAddress={walletAddress}
                     stakeWheelBlockchain={stakeWheelBlockchain}
                     stakeTokenBlockchain={stakeTokenBlockchain}
-                    ticketTokenBlockchain={ticketTokenBlockchain} />} >
+                    ticketTokenBlockchain={ticketTokenBlockchain}
+                    myWinnings={myWinnings} />} >
                 </Route>
                 <Route path="/faucet" element={
                   <Faucet
@@ -71,7 +73,9 @@ function App() {
                     walletAddress={walletAddress}
                     ethProvider={ethProvider}
                     stakeWheelBlockchain={stakeWheelBlockchain}
-                    ticketTokenBlockchain={ticketTokenBlockchain} />} >
+                    ticketTokenBlockchain={ticketTokenBlockchain}
+                    myWinnings={myWinnings}
+                    setMyWinnings={setMyWinnings} />} >
                 </Route>
                 <Route path="/" element={
                   <Home

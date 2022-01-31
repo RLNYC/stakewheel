@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space } from 'antd';
+import { Table, Button, Space, Typography } from 'antd';
 
 import { getDate } from '../../utils/date'; 
 import StakeModal from '../../components/StakeModal';
@@ -106,6 +106,9 @@ function Overview({ walletAddress, stakeWheelBlockchain }) {
   ];
 
   return <div>
+    <Typography.Title level={2}>
+      Your Stake NFTS
+    </Typography.Title>
     <Table columns={columns} dataSource={nfts} />
     <StakeModal
       isModalVisible={isModalVisible}

@@ -3,8 +3,9 @@ import { Layout } from 'antd';
 
 import Sidebar from '../components/myaccount/Sidebar';
 import Overview from '../components/myaccount/Overview';
+import Winnings from '../components/myaccount/Winnings';
 
-function MyAccount({ walletAddress, stakeWheelBlockchain }) {
+function MyAccount({ walletAddress, stakeWheelBlockchain, myWinnings }) {
   const [currentTab, setCurrentTab] = useState("Overview");
 
   let content;
@@ -16,10 +17,11 @@ function MyAccount({ walletAddress, stakeWheelBlockchain }) {
         stakeWheelBlockchain={stakeWheelBlockchain} />;
       break;
     case "Winnings":
-      content = <h1>Winnings</h1>;
+      content = <Winnings
+        myWinnings={myWinnings} />;
       break;
     case "Donations":
-      content = <h1>Donations</h1>;
+      content = <h1>Comming Soon..</h1>;
       break;
     default:
       content = 'Page not found';
