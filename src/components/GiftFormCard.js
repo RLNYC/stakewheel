@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Spin, Row, Col, Form, Input, Button } from 'antd';
- 
+import Moralis from 'moralis';
+
 const msgList = [
   "Just for you",
   "Thank you",
@@ -16,7 +17,12 @@ function GiftFormCard() {
     try {
       setLoading(true);
       console.log(values);
-      
+      Moralis.Cloud.run("sendEmailToUser", {
+        email: values.recipient,
+        fromemail: values.fromEmail,
+        code: "1234"
+      });
+      console.log("it works");
       setLoading(false);
     } catch(error){
       setLoading(false);

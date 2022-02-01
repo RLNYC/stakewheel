@@ -8,6 +8,7 @@ import { STAKE_WHEEL_ADDRESS, STAKE_TOKEN_ADDRESS, TICKET_TOKEN_ADDRESS } from '
 import StakeWheel from '../artifacts/contracts/StakeWheel.sol/StakeWheel.json';
 import StakeToken from '../artifacts/contracts/StakeToken.sol/StakeToken.json';
 import TicketToken from '../artifacts/contracts/TicketToken.sol/TicketToken.json';
+import StakeShare from '../assets/StakeShare.jpg';
 
 function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheelBlockchain, setStakeTokenBlockchain, setTicketTokenBlockchain }) {
   const connetToWallet = async () => {
@@ -34,7 +35,7 @@ function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheel
   return (
     <Layout.Header className="white-bg-color" style={{ display: 'flex', alignItems: 'center',  padding: '0 6.5rem'}}>
       <Link to="/" style={{ marginRight: '2rem' }}>
-        Stake Wheel
+        <img src={StakeShare} alt="Logo" width={200} />
       </Link>
       <Menu mode="horizontal" defaultSelectedKeys={['1']} style={{ flex: 1 }}>
         <Menu.Item key="1">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import { Layout } from 'antd';
+import Moralis from 'moralis';
 
 import './App.css';
 import Navbar from './components/Navbar';
@@ -10,6 +11,11 @@ import SpinWheel from './pages/SpinWheel';
 import Gift from './pages/Gift';
 import MyAccount from './pages/MyAccount';
 import Faucet from './pages/Faucet';
+import { MORALIS_APPID, MORALIS_SERVERURL} from './config';
+
+const serverUrl = MORALIS_SERVERURL;
+const appId = MORALIS_APPID;
+Moralis.start({ serverUrl, appId });
 
 function App() {
   const [walletAddress, setWalletAddress] = useState('');

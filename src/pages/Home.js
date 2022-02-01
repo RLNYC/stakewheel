@@ -62,7 +62,7 @@ function Home({ stakeWheelBlockchain }) {
       How It Works
     </Typography.Title>
     <p style={{ fontSize: '1.4rem', textAlign: 'center'}}>
-      Participate in our staking pool and spin the prize wheel to win the staking awards and More... 
+      Join our community to spin the staking reward prize wheel and earn charity donation tokens
     </p>
     <img src={HomeImg} style={{ width: "100%"}} alt="How it works" />
   </div>;
