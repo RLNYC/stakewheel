@@ -16,7 +16,7 @@ const tailLayout = {
   },
 };
 
-function DonationFormCard({ stakeWheelBlockchain, getPoolPrizeInfo, getBalance }) {
+function DonationFormCard({ giftTokenBalance, stakeWheelBlockchain, getPoolPrizeInfo, getBalance }) {
   const [form] = Form.useForm();
 
   const [usd, setUSD] = useState("0");
@@ -46,9 +46,9 @@ function DonationFormCard({ stakeWheelBlockchain, getPoolPrizeInfo, getBalance }
 
   return (
     <Spin spinning={loading}>
-      <Card style={{ maxWidth: "500px"}}>
+      <Card title="Donate directly to charities">
         <Typography.Title level={4} style={{ marginTop: '0', marginBottom: '1rem'}}>
-          Your Available Donation Tokens: 0
+          Your Available Donation Tokens: {giftTokenBalance / 10 ** 18}
         </Typography.Title>
         
         <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>

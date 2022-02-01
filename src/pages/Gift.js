@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Spin, Card, Row, Col, Divider  } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
+import { Card, Row, Col, InputNumber, Typography, Button, Divider  } from 'antd';
 import {
   HeartOutlined,
   SmileOutlined,
@@ -10,17 +11,56 @@ import DonationFormCard from '../components/DonationFormCard';
 import GiftFormCard from '../components/GiftFormCard';
 import ChartiyIcon from '../assets/charity1.png';
 
-function Gift({ walletAddress, giftTokenBlockchain }) {
+function Gift({ walletAddress, ethProvider, giftTokenBlockchain }) {
+  const [avaxBalance, setAvaxBalance] = useState(0);
+  const [giftTokenBalance, setGiftTokenBalance] = useState(0);
   const [occasionNum, setOccasionNum] = useState(1);
   const [purchaseGiftTokensAmount, setPurchaseGiftTokensAmount] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [buyloading, setBuyLoading] = useState(false);
+
+  useEffect(() => {
+    if(giftTokenBlockchain) getGiftToken();
+  }, [giftTokenBlockchain]);
+
+  useEffect(() => {
+    if(walletAddress) getBalance();
+  }, [walletAddress]);
+
+  const getBalance = async () => {
+    const balance = await ethProvider.getBalance(walletAddress);
+    setAvaxBalance(balance.toString());
+  }
+
+  const getGiftToken = async () => {
+    const amount = await giftTokenBlockchain.balanceOf(walletAddress);
+    setGiftTokenBalance(amount);
+  }
 
   function setPurchaseGiftTokens(value) {
     setPurchaseGiftTokensAmount(value);
   }
 
+  const buyToken = async () => {
+    try {
+      setBuyLoading(true);
+
+      const ethToWei = ethers.utils.parseUnits(purchaseGiftTokensAmount.toString(), 'ether');
+      const transaction = await giftTokenBlockchain.purchaseToken({ value: ethToWei });
+      const tx = await transaction.wait();
+      console.log(tx);
+
+      getBalance();
+      getGiftToken();
+
+      setPurchaseGiftTokensAmount(0);
+      setBuyLoading(false);
+    } catch(error) {
+      setBuyLoading(false);
+    }
+  }
+
   return (
-    <Spin spinning={loading}>
+    <div>
       <Card>
         <div style={{ display: "flex", alignItems: "center"}}>
           <img src={ChartiyIcon} alt="Chartiy" width={70} style={{ marginRight: "1rem" }} />
@@ -33,8 +73,26 @@ function Gift({ walletAddress, giftTokenBlockchain }) {
             </p>
           </div>
         </div>
-
-        <DonationFormCard />
+        <Row gutter={16}>
+          <Col className="gutter-col" sm={{ span: 24 }} md={{ span: 12 }}>
+            <Card title="Purchase Gift Tokens">
+              <Typography.Title level={4} style={{ marginTop: '0', marginBottom: '0'}}>
+                Your Available AVAX tokens: {avaxBalance / 10 ** 18}
+              </Typography.Title>
+              <br />
+              <p>Amount</p>
+              <InputNumber value={purchaseGiftTokensAmount} onChange={setPurchaseGiftTokens} />
+              <br />
+              <br />
+              <Button className="primary-bg-color" type="primary" onClick={buyToken} loading={buyloading}>
+                Purchase
+              </Button>
+            </Card>
+          </Col>
+          <Col className="gutter-col" sm={{ span: 24 }} md={{ span: 12 }}>
+            <DonationFormCard giftTokenBalance={giftTokenBalance} />
+          </Col>
+        </Row>
       </Card>
       <Divider orientation="left">Gift Your Donation Token</Divider>
       <Card>
@@ -77,7 +135,7 @@ function Gift({ walletAddress, giftTokenBlockchain }) {
           walletAddress={walletAddress}
           giftTokenBlockchain={giftTokenBlockchain} />
       </Card>
-    </Spin>
+    </div>
   )
 }
 

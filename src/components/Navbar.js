@@ -4,13 +4,14 @@ import { Layout, Menu, Button } from 'antd';
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 
-import { STAKE_WHEEL_ADDRESS, STAKE_TOKEN_ADDRESS, TICKET_TOKEN_ADDRESS } from '../config';
+import { STAKE_WHEEL_ADDRESS, STAKE_TOKEN_ADDRESS, TICKET_TOKEN_ADDRESS, GIFT_TOKEN_ADDRESS } from '../config';
 import StakeWheel from '../artifacts/contracts/StakeWheel.sol/StakeWheel.json';
 import StakeToken from '../artifacts/contracts/StakeToken.sol/StakeToken.json';
 import TicketToken from '../artifacts/contracts/TicketToken.sol/TicketToken.json';
+import GiftToken from '../artifacts/contracts/GiftToken.sol/GiftToken.json';
 import StakeShare from '../assets/StakeShare.jpg';
 
-function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheelBlockchain, setStakeTokenBlockchain, setTicketTokenBlockchain }) {
+function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheelBlockchain, setStakeTokenBlockchain, setTicketTokenBlockchain, setGiftTokenBlockchain }) {
   const connetToWallet = async () => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
@@ -30,6 +31,9 @@ function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheel
 
     let contract3 = new ethers.Contract(STAKE_TOKEN_ADDRESS, StakeToken.abi, signer);
     setStakeTokenBlockchain(contract3);
+
+    let contract4 = new ethers.Contract(GIFT_TOKEN_ADDRESS, GiftToken.abi, signer);
+    setGiftTokenBlockchain(contract4);
   }
 
   return (

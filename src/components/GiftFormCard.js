@@ -8,7 +8,7 @@ const msgList = [
   "Congratulations"
 ];
 
-function GiftFormCard() {
+function GiftFormCard({ giftTokenBlockchain }) {
   const [form] = Form.useForm();
 
   const [loading, setLoading] = useState(false);
@@ -17,17 +17,30 @@ function GiftFormCard() {
     try {
       setLoading(true);
       console.log(values);
+      
+      const redeemId = await sendGiftToken(values);
+
       Moralis.Cloud.run("sendEmailToUser", {
         email: values.recipient,
         fromemail: values.fromEmail,
-        code: "1234"
+        code: redeemId,
+        tokenamount: values.amount
       });
+      
       console.log("it works");
       setLoading(false);
     } catch(error){
       setLoading(false);
     }
   };
+
+  const sendGiftToken = async (values) => {
+    const transaction = await giftTokenBlockchain.sendTokenToSomeone((+values.amount * 10 ** 18).toString());
+    const tx = await transaction.wait();
+    console.log(tx);
+
+    return tx.events[1].args.redeemId.toString();
+  }
 
   const onReset = () => {
     form.resetFields();

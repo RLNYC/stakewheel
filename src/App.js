@@ -23,6 +23,7 @@ function App() {
   const [ticketTokenBlockchain, setTicketTokenBlockchain] = useState(null);
   const [stakeTokenBlockchain, setStakeTokenBlockchain] = useState(null);
   const [stakeWheelBlockchain, setStakeWheelBlockchain] = useState(null);
+  const [giftTokenBlockchain, setGiftTokenBlockchain] = useState(null);
   const [myWinnings, setMyWinnings] = useState([]);
 
   return (
@@ -34,7 +35,8 @@ function App() {
           setEthProvider={setEthProvider}
           setStakeWheelBlockchain={setStakeWheelBlockchain}
           setStakeTokenBlockchain={setStakeTokenBlockchain}
-          setTicketTokenBlockchain={setTicketTokenBlockchain} />
+          setTicketTokenBlockchain={setTicketTokenBlockchain}
+          setGiftTokenBlockchain={setGiftTokenBlockchain} />
         <Layout>
           <Layout className="white-bg-color" style={{ padding: '0 5rem 5rem', minHeight: '92vh' }}>
             <Layout.Content
@@ -55,9 +57,8 @@ function App() {
                 <Route path="/gift" element={
                   <Gift
                     walletAddress={walletAddress}
-                    stakeWheelBlockchain={stakeWheelBlockchain}
-                    stakeTokenBlockchain={stakeTokenBlockchain}
-                    ethProvider={ethProvider} />} >
+                    ethProvider={ethProvider}
+                    giftTokenBlockchain={giftTokenBlockchain} />} >
                 </Route>
                 <Route path="/myaccount" element={
                   <MyAccount
