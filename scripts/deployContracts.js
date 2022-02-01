@@ -35,6 +35,13 @@ async function main() {
   await stakeWheel.deployed();
 
   console.log("Stake Wheel deployed to:", stakeWheel.address);
+
+  const GiftToken = await hre.ethers.getContractFactory("GiftToken");
+  const giftToken = await GiftToken.deploy();
+
+  await giftToken.deployed();
+
+  console.log("Gift Token deployed to:", giftToken.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
