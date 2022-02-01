@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Spin, Row, Col, Form, Input, Button } from 'antd';
+import { Spin, Row, Col, Form, Input, Button, message } from 'antd';
 import Moralis from 'moralis';
 
 const msgList = [
@@ -26,8 +26,8 @@ function GiftFormCard({ giftTokenBlockchain }) {
         code: redeemId,
         tokenamount: values.amount
       });
-      
-      console.log("it works");
+
+      message.success('Email sent');
       setLoading(false);
     } catch(error){
       setLoading(false);
