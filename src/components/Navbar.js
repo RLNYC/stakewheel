@@ -1,17 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Menu, Button } from 'antd';
 import { ethers } from 'ethers';
+import UAuth from '@uauth/js';
 import Web3Modal from 'web3modal';
 
-import { STAKE_WHEEL_ADDRESS, STAKE_TOKEN_ADDRESS, TICKET_TOKEN_ADDRESS, GIFT_TOKEN_ADDRESS } from '../config';
+import {
+  STAKE_WHEEL_ADDRESS,
+  STAKE_TOKEN_ADDRESS,
+  TICKET_TOKEN_ADDRESS,
+  GIFT_TOKEN_ADDRESS,
+  UNSTOPPABLEDOMAINS_CLIENT_ID,
+  UNSTOPPABLEDOMAINS_CLIENT_SECRET,
+  UNSTOPPABLEDOMAINS_REDIRECT_URI,
+  UNSTOPPABLEDOMAINS_LOGOUT_REDIRECT_URI
+} from '../config';
 import StakeWheel from '../artifacts/contracts/StakeWheel.sol/StakeWheel.json';
 import StakeToken from '../artifacts/contracts/StakeToken.sol/StakeToken.json';
 import TicketToken from '../artifacts/contracts/TicketToken.sol/TicketToken.json';
 import GiftToken from '../artifacts/contracts/GiftToken.sol/GiftToken.json';
 import StakeShare from '../assets/StakeShare.jpg';
 
+const uauth = new UAuth({
+  clientID: UNSTOPPABLEDOMAINS_CLIENT_ID,
+  clientSecret: UNSTOPPABLEDOMAINS_CLIENT_SECRET,
+  scope: 'openid email wallet',
+  redirectUri: UNSTOPPABLEDOMAINS_REDIRECT_URI,
+  postLogoutRedirectUri: UNSTOPPABLEDOMAINS_LOGOUT_REDIRECT_URI,
+})
+
 function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheelBlockchain, setStakeTokenBlockchain, setTicketTokenBlockchain, setGiftTokenBlockchain }) {
+  const [domainName, setDomainName] = useState('');
+
   const connetToWallet = async () => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
@@ -34,6 +54,26 @@ function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheel
 
     let contract4 = new ethers.Contract(GIFT_TOKEN_ADDRESS, GiftToken.abi, signer);
     setGiftTokenBlockchain(contract4);
+  }
+
+  const login = async () => {
+    try {
+      const authorization = await uauth.loginWithPopup();
+
+      console.log(authorization);
+      setDomainName(authorization.idToken.sub);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const logout = async () => {
+    try {
+      await uauth.logout();
+
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -73,25 +113,25 @@ function Navbar({ walletAddress, setWalletAddress, setEthProvider, setStakeWheel
           </Link>
         </Menu.Item>
       </Menu>
-      {!walletAddress
-        ? <div>
-            <Button
-              className="primary-bg-color"
-              style={{ marginBottom: '7px'}}
-              type="primary"
-              onClick={connetToWallet}
-            >
-              Connect to Wallet
-            </Button>
-          </div>
-        : <Button
-            className="primary-bg-color"
-            style={{ marginBottom: '7px'}}
-            type="primary"
-          >
-            { walletAddress.substring(0, 7) + '...' + walletAddress.substring(35, 42) }
+      {domainName
+        ? <Button onClick={logout}>Logout</Button>
+        : <Button onClick={login}>
+            Login with Unstoppable
           </Button>
       }
+      <Button
+        className="primary-bg-color"
+        style={{ marginBottom: '7px'}}
+        type="primary"
+        onClick={connetToWallet}
+      >
+        {domainName
+          ? domainName
+          : walletAddress 
+            ? walletAddress.substring(0,7) + "..." + walletAddress.substring(35,42)
+            : "Connect to Wallet"
+        }
+      </Button>
     </Layout.Header>
   )
 }
